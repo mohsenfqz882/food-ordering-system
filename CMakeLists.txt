@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.20)
+project(FoodOrderingSystem CXX C)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# SQLite amalgamation
+add_library(sqlite3 STATIC external/sqlite3.c)
+target_include_directories(sqlite3 PUBLIC external)
+
+add_executable(FoodOrderingSystem main.cpp
+        MenuItem.h
+        FoodItem.h
+        DrinkItem.h
+        Restaurant.h
+        OrderItem.h
+        Order.h)
+target_link_libraries(FoodOrderingSystem PRIVATE sqlite3)
