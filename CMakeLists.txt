@@ -5,7 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # SQLite amalgamation
-add_library(sqlite3 STATIC external/sqlite3.c)
+add_library(sqlite3 STATIC external/sqlite3.c
+        dao/RestaurantDao.cpp)
 target_include_directories(sqlite3 PUBLIC external)
 
 add_executable(FoodOrderingSystem
@@ -27,5 +28,12 @@ add_executable(FoodOrderingSystem
         membership/NormalLevel.h
         membership/SilverLevel.h
         membership/GoldLevel.h
-        membership/VipLevel.h)
+        membership/VipLevel.h
+        dao/RestaurantDao.h
+        dao/MenuItemDAO.cpp
+        dao/MenuItemDAO.h
+        dao/OrderDAO.cpp
+        dao/OrderDAO.h
+        CustomerMenu.cpp
+        CustomerMenu.h)
 target_link_libraries(FoodOrderingSystem PRIVATE sqlite3)

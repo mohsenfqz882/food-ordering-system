@@ -18,4 +18,10 @@ public:
     bool addUser(const User& user);
 
     bool usernameExists(const string& username);
+
+    bool login(const string& username, const string& password);
+
+    User getUser(const string& username);
+
+    string getRole(const string& username);
 };
