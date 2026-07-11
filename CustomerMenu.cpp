@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "dao/RestaurantDAO.h"
+#include "RestaurantView.h"
 
 CustomerMenu::CustomerMenu(DatabaseManager* database) {
     this->database = database;
@@ -33,21 +34,33 @@ void CustomerMenu::run() {
 
             if (restaurants.empty()) {
                 std::cout << "No restaurant found.\n";
+                continue;
             }
-            else {
-                std::cout << "\n----- Restaurants -----\n";
 
-                for (const auto& restaurant : restaurants) {
-                    restaurant.display();
-                }
-            }
+            std::cout << "\n===== Restaurants =====\n";
+
+            for (const auto& restaurant : restaurants)
+                restaurant.display();
+
+            int restaurantId;
+
+            std::cout << "\nRestaurant ID (0 Back): ";
+            std::cin >> restaurantId;
+
+            if (restaurantId == 0)
+                continue;
+
+            RestaurantView restaurantView(database, restaurantId);
+            restaurantView.run();
         }
 
         else if (choice == 2) {
+
             std::cout << "Order history will be implemented later.\n";
         }
 
         else {
+
             std::cout << "Invalid choice.\n";
         }
     }

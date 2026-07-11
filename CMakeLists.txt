@@ -35,5 +35,7 @@ add_executable(FoodOrderingSystem
         dao/OrderDAO.cpp
         dao/OrderDAO.h
         CustomerMenu.cpp
-        CustomerMenu.h)
+        CustomerMenu.h
+        RestaurantView.cpp
+        RestaurantView.h)
 target_link_libraries(FoodOrderingSystem PRIVATE sqlite3)

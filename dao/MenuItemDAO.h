@@ -15,4 +15,6 @@ public:
     bool addMenuItem(MenuItem* item);
 
     std::vector<MenuItem*> getAllMenuItems();
+
+    std::vector<MenuItem*> getMenuItemsByRestaurant(int restaurantId);
 };
