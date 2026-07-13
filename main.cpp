@@ -6,6 +6,7 @@
 #include "dao/UserDAO.h"
 
 #include "CustomerMenu.h"
+#include "RestaurantManagerMenu.h"
 
 using namespace std;
 
@@ -88,7 +89,9 @@ int main() {
             }
             else if (role == "manager") {
 
-                cout << "Restaurant Manager section will be implemented later.\n";
+                // فعلاً مدیر رستوران شماره 1
+                RestaurantManagerMenu menu(&db, 1);
+                menu.run();
 
             }
             else if (role == "admin") {

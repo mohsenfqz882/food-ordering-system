@@ -17,4 +17,6 @@ public:
     std::vector<Restaurant> getAllRestaurants();
 
     std::vector<Restaurant> getActiveRestaurants();
+
+    Restaurant getRestaurantById(int id);
 };
