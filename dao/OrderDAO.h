@@ -15,4 +15,6 @@ public:
     bool addOrder(const Order& order);
 
     std::vector<Order> getAllOrders();
+
+    std::vector<Order> getOrdersByUser(int userId);
 };

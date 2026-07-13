@@ -1,0 +1,25 @@
+#ifndef CART_H
+#define CART_H
+
+#include <vector>
+#include <iostream>
+
+#include "OrderItem.h"
+
+class Cart {
+private:
+    std::vector<OrderItem> items;
+
+public:
+    void addItem(int itemId, int count);
+
+    void clear();
+
+    bool empty() const;
+
+    void display() const;
+
+    const std::vector<OrderItem>& getItems() const;
+};
+
+#endif

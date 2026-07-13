@@ -5,8 +5,9 @@
 #include "dao/RestaurantDAO.h"
 #include "RestaurantView.h"
 
-CustomerMenu::CustomerMenu(DatabaseManager* database) {
+CustomerMenu::CustomerMenu(DatabaseManager* database, int userId) {
     this->database = database;
+    this->userId = userId;
 }
 
 void CustomerMenu::run() {
@@ -50,7 +51,7 @@ void CustomerMenu::run() {
             if (restaurantId == 0)
                 continue;
 
-            RestaurantView restaurantView(database, restaurantId);
+            RestaurantView restaurantView(database, restaurantId, userId);
             restaurantView.run();
         }
 

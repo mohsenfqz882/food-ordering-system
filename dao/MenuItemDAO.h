@@ -12,9 +12,11 @@ private:
 public:
     MenuItemDAO(DatabaseManager* database);
 
-    bool addMenuItem(MenuItem* item);
+    bool addMenuItem(int restaurantId, MenuItem* item);
 
     std::vector<MenuItem*> getAllMenuItems();
 
     std::vector<MenuItem*> getMenuItemsByRestaurant(int restaurantId);
+
+    MenuItem* getMenuItemById(int id);
 };

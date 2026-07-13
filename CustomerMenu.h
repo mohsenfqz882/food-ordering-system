@@ -6,9 +6,10 @@
 class CustomerMenu {
 private:
     DatabaseManager* database;
+    int userId;
 
 public:
-    CustomerMenu(DatabaseManager* database);
+    CustomerMenu(DatabaseManager* database, int userId);
 
     void run();
 };

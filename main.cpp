@@ -1,7 +1,10 @@
 #include <iostream>
 
 #include "DatabaseManager.h"
+#include "SeedData.h"
+
 #include "dao/UserDAO.h"
+
 #include "CustomerMenu.h"
 
 using namespace std;
@@ -14,6 +17,8 @@ int main() {
         return 0;
 
     db.init();
+
+    SeedData::initialize(&db);
 
     UserDAO userDAO(&db);
 
@@ -71,22 +76,27 @@ int main() {
                 continue;
             }
 
+            User user = userDAO.getUser(username);
+
             string role = userDAO.getRole(username);
 
             if (role == "customer") {
 
-                CustomerMenu menu(&db);
+                CustomerMenu menu(&db, user.getId());
                 menu.run();
 
-            } else if (role == "manager") {
+            }
+            else if (role == "manager") {
 
                 cout << "Restaurant Manager section will be implemented later.\n";
 
-            } else if (role == "admin") {
+            }
+            else if (role == "admin") {
 
                 cout << "Admin section will be implemented later.\n";
 
-            } else {
+            }
+            else {
 
                 cout << "Unknown user role.\n";
             }
