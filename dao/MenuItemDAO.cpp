@@ -11,8 +11,8 @@ bool MenuItemDAO::addMenuItem(int restaurantId, MenuItem* item) {
     sqlite3* db = database->getDatabase();
 
     const char* sql =
-            "INSERT INTO menu_items(restaurant_id,name,description,price,type,extra,is_available)"
-            " VALUES(?,?,?,?,?,?,?);";
+        "INSERT INTO menu_items(restaurant_id,name,description,price,type,extra,is_available)"
+        " VALUES(?,?,?,?,?,?,?);";
 
     sqlite3_stmt* stmt;
 
@@ -30,7 +30,8 @@ bool MenuItemDAO::addMenuItem(int restaurantId, MenuItem* item) {
     if (type == "Food") {
         FoodItem* food = dynamic_cast<FoodItem*>(item);
         sqlite3_bind_int(stmt, 6, food->getCookingTime());
-    } else {
+    }
+    else {
         DrinkItem* drink = dynamic_cast<DrinkItem*>(item);
         sqlite3_bind_int(stmt, 6, drink->getVolume());
     }
@@ -51,7 +52,7 @@ std::vector<MenuItem*> MenuItemDAO::getAllMenuItems() {
     sqlite3* db = database->getDatabase();
 
     const char* sql =
-            "SELECT id,name,description,price,type,extra,is_available FROM menu_items;";
+        "SELECT id,name,description,price,type,extra,is_available FROM menu_items;";
 
     sqlite3_stmt* stmt;
 
@@ -86,8 +87,8 @@ std::vector<MenuItem*> MenuItemDAO::getMenuItemsByRestaurant(int restaurantId) {
     sqlite3* db = database->getDatabase();
 
     const char* sql =
-            "SELECT id,name,description,price,type,extra,is_available "
-            "FROM menu_items WHERE restaurant_id=?;";
+        "SELECT id,name,description,price,type,extra,is_available "
+        "FROM menu_items WHERE restaurant_id=?;";
 
     sqlite3_stmt* stmt;
 
@@ -97,8 +98,7 @@ std::vector<MenuItem*> MenuItemDAO::getMenuItemsByRestaurant(int restaurantId) {
     sqlite3_bind_int(stmt, 1, restaurantId);
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-
-        int id = sqlite3_column_int(stmt, 0);
+                int id = sqlite3_column_int(stmt, 0);
         std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
         std::string description = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
         double price = sqlite3_column_double(stmt, 3);
@@ -122,8 +122,8 @@ MenuItem* MenuItemDAO::getMenuItemById(int id) {
     sqlite3* db = database->getDatabase();
 
     const char* sql =
-            "SELECT id,name,description,price,type,extra,is_available "
-            "FROM menu_items WHERE id=?;";
+        "SELECT id,name,description,price,type,extra,is_available "
+        "FROM menu_items WHERE id=?;";
 
     sqlite3_stmt* stmt;
 
@@ -136,21 +136,103 @@ MenuItem* MenuItemDAO::getMenuItemById(int id) {
 
     if (sqlite3_step(stmt) == SQLITE_ROW) {
 
-        int itemId = sqlite3_column_int(stmt, 0);
-        std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-        std::string description = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+        std::string name =
+            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        std::string description =
+            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
         double price = sqlite3_column_double(stmt, 3);
-        std::string type = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
+        std::string type =
+            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
         int extra = sqlite3_column_int(stmt, 5);
         bool available = sqlite3_column_int(stmt, 6);
 
         if (type == "Food")
-            item = new FoodItem(itemId, name, description, price, available, extra);
+            item = new FoodItem(id, name, description, price, available, extra);
         else
-            item = new DrinkItem(itemId, name, description, price, available, extra);
+            item = new DrinkItem(id, name, description, price, available, extra);
     }
 
     sqlite3_finalize(stmt);
 
     return item;
+}
+
+bool MenuItemDAO::updateMenuItem(MenuItem* item) {
+
+    sqlite3* db = database->getDatabase();
+
+    const char* sql =
+        "UPDATE menu_items "
+        "SET name=?,description=?,price=?,extra=?,is_available=? "
+        "WHERE id=?;";
+
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+        return false;
+
+    sqlite3_bind_text(stmt, 1,
+                      item->getName().c_str(),
+                      -1,
+                      SQLITE_TRANSIENT);
+
+    sqlite3_bind_text(stmt, 2,
+                      item->getDescription().c_str(),
+                      -1,
+                      SQLITE_TRANSIENT);
+
+    sqlite3_bind_double(stmt, 3,
+                        item->getPrice());
+
+    if (item->getType() == "Food") {
+
+        FoodItem* food =
+            dynamic_cast<FoodItem*>(item);
+
+        sqlite3_bind_int(stmt, 4,
+                         food->getCookingTime());
+    }
+    else {
+
+        DrinkItem* drink =
+            dynamic_cast<DrinkItem*>(item);
+
+        sqlite3_bind_int(stmt, 4,
+                         drink->getVolume());
+    }
+
+    sqlite3_bind_int(stmt, 5,
+                     item->isAvailable());
+
+    sqlite3_bind_int(stmt, 6,
+                     item->getId());
+
+    bool success =
+        (sqlite3_step(stmt) == SQLITE_DONE);
+
+    sqlite3_finalize(stmt);
+
+    return success;
+}
+
+bool MenuItemDAO::deleteMenuItem(int id) {
+
+    sqlite3* db = database->getDatabase();
+
+    const char* sql =
+        "DELETE FROM menu_items WHERE id=?;";
+
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+        return false;
+
+    sqlite3_bind_int(stmt, 1, id);
+
+    bool success =
+        (sqlite3_step(stmt) == SQLITE_DONE);
+
+    sqlite3_finalize(stmt);
+
+    return success;
 }

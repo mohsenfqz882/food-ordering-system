@@ -5,7 +5,7 @@
 
 class FoodItem : public MenuItem {
 private:
-    int cookingTime; // cooking time in minutes
+    int cookingTime;
 
 public:
     FoodItem(int id, std::string name, std::string description,
@@ -14,9 +14,17 @@ public:
         this->cookingTime = cookingTime;
     }
 
-    int getCookingTime() { return cookingTime; }
+    int getCookingTime() {
+        return cookingTime;
+    }
 
-    std::string getType() override { return "Food"; }
+    void setCookingTime(int cookingTime) {
+        this->cookingTime = cookingTime;
+    }
+
+    std::string getType() override {
+        return "Food";
+    }
 
     void display() override {
         std::cout << "[" << id << "] " << name

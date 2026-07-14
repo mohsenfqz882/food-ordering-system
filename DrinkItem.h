@@ -5,7 +5,7 @@
 
 class DrinkItem : public MenuItem {
 private:
-    int volume; // volume in milliliters
+    int volume;
 
 public:
     DrinkItem(int id, std::string name, std::string description,
@@ -14,9 +14,17 @@ public:
         this->volume = volume;
     }
 
-    int getVolume() { return volume; }
+    int getVolume() {
+        return volume;
+    }
 
-    std::string getType() override { return "Drink"; }
+    void setVolume(int volume) {
+        this->volume = volume;
+    }
+
+    std::string getType() override {
+        return "Drink";
+    }
 
     void display() override {
         std::cout << "[" << id << "] " << name

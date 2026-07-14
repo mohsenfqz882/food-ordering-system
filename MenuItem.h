@@ -24,17 +24,30 @@ public:
 
     virtual ~MenuItem() {}
 
-    // getters (encapsulation)
     int getId() { return id; }
     std::string getName() { return name; }
     std::string getDescription() { return description; }
     double getPrice() { return price; }
     bool isAvailable() { return available; }
 
-    // item type - polymorphism
+    void setName(const std::string& name) {
+        this->name = name;
+    }
+
+    void setDescription(const std::string& description) {
+        this->description = description;
+    }
+
+    void setPrice(double price) {
+        this->price = price;
+    }
+
+    void setAvailable(bool available) {
+        this->available = available;
+    }
+
     virtual std::string getType() { return "MenuItem"; }
 
-    // display info - polymorphism
     virtual void display() {
         std::cout << "[" << id << "] " << name
                   << " - " << price << " Toman | "

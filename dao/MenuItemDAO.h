@@ -19,4 +19,8 @@ public:
     std::vector<MenuItem*> getMenuItemsByRestaurant(int restaurantId);
 
     MenuItem* getMenuItemById(int id);
+
+    bool updateMenuItem(MenuItem* item);
+
+    bool deleteMenuItem(int id);
 };

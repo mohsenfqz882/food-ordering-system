@@ -208,20 +208,192 @@ void RestaurantManagerMenu::run() {
             break;
         }
 
-            case 4:
+            case 4: {
 
-                std::cout << "Edit menu item section will be implemented.\n";
+            auto items = menuItemDAO.getMenuItemsByRestaurant(restaurantId);
+
+            if (items.empty()) {
+
+                std::cout << "No menu items found.\n";
                 break;
+            }
 
-            case 5:
+            std::cout << "\n===== Menu Items =====\n";
 
-                std::cout << "Remove menu item section will be implemented.\n";
+            for (MenuItem* item : items)
+                item->display();
+
+            int itemId;
+
+            std::cout << "\nItem ID (0 Back): ";
+            std::cin >> itemId;
+
+            if (itemId == 0) {
+
+                for (MenuItem* item : items)
+                    delete item;
+
                 break;
+            }
 
-            case 6:
+            MenuItem* item = menuItemDAO.getMenuItemById(itemId);
 
-                std::cout << "Change availability section will be implemented.\n";
+            if (item == nullptr) {
+
+                std::cout << "Item not found.\n";
+
+                for (MenuItem* i : items)
+                    delete i;
+
                 break;
+            }
+
+            std::string name;
+            std::string description;
+            double price;
+
+            std::cin.ignore();
+
+            std::cout << "New Name: ";
+            std::getline(std::cin, name);
+
+            std::cout << "New Description: ";
+            std::getline(std::cin, description);
+
+            std::cout << "New Price: ";
+            std::cin >> price;
+
+            item->setName(name);
+            item->setDescription(description);
+            item->setPrice(price);
+
+            if (item->getType() == "Food") {
+
+                int time;
+
+                std::cout << "Cooking Time: ";
+                std::cin >> time;
+
+                dynamic_cast<FoodItem*>(item)->setCookingTime(time);
+            }
+            else {
+
+                int volume;
+
+                std::cout << "Volume: ";
+                std::cin >> volume;
+
+                dynamic_cast<DrinkItem*>(item)->setVolume(volume);
+            }
+
+            if (menuItemDAO.updateMenuItem(item))
+                std::cout << "Updated successfully.\n";
+            else
+                std::cout << "Update failed.\n";
+
+            delete item;
+
+            for (MenuItem* i : items)
+                delete i;
+
+            break;
+            };
+
+            case 5: {
+
+                auto items = menuItemDAO.getMenuItemsByRestaurant(restaurantId);
+
+                if (items.empty()) {
+
+                    std::cout << "No menu items found.\n";
+                    break;
+                }
+
+                std::cout << "\n===== Menu Items =====\n";
+
+                for (MenuItem* item : items)
+                    item->display();
+
+                int id;
+
+                std::cout << "\nItem ID (0 Back): ";
+                std::cin >> id;
+
+                if (id == 0) {
+
+                    for (MenuItem* item : items)
+                        delete item;
+
+                    break;
+                }
+
+                if (menuItemDAO.deleteMenuItem(id))
+                    std::cout << "Item deleted successfully.\n";
+                else
+                    std::cout << "Delete failed.\n";
+
+                for (MenuItem* item : items)
+                    delete item;
+
+                break;
+            }
+
+            case 6: {
+
+                auto items = menuItemDAO.getMenuItemsByRestaurant(restaurantId);
+
+                if (items.empty()) {
+
+                    std::cout << "No menu items found.\n";
+                    break;
+                }
+
+                std::cout << "\n===== Menu Items =====\n";
+
+                for (MenuItem* item : items)
+                    item->display();
+
+                int id;
+
+                std::cout << "\nItem ID (0 Back): ";
+                std::cin >> id;
+
+                if (id == 0) {
+
+                    for (MenuItem* item : items)
+                        delete item;
+
+                    break;
+                }
+
+                MenuItem* item = menuItemDAO.getMenuItemById(id);
+
+                if (item == nullptr) {
+
+                    std::cout << "Item not found.\n";
+
+                    for (MenuItem* i : items)
+                        delete i;
+
+                    break;
+                }
+
+                bool newStatus = !item->isAvailable();
+
+                item->setAvailable(newStatus);
+
+                if (menuItemDAO.updateMenuItem(item))
+                    std::cout << "Availability changed successfully.\n";
+                else
+                    std::cout << "Update failed.\n";
+
+                delete item;
+
+                for (MenuItem* i : items)
+                    delete i;
+
+                break;
+            }
 
             default:
 
