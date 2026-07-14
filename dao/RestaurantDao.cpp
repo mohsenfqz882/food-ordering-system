@@ -100,7 +100,6 @@ std::vector<Restaurant> RestaurantDAO::getActiveRestaurants() {
 
     return restaurants;
 }
-
 Restaurant RestaurantDAO::getRestaurantById(int id) {
 
     sqlite3* db = database->getDatabase();
@@ -121,10 +120,14 @@ Restaurant RestaurantDAO::getRestaurantById(int id) {
     if (sqlite3_step(stmt) == SQLITE_ROW) {
 
         restaurant.id = sqlite3_column_int(stmt, 0);
-        restaurant.name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-        restaurant.address = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-        restaurant.phone = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
-        restaurant.description = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
+        restaurant.name =
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        restaurant.address =
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+        restaurant.phone =
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+        restaurant.description =
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
         restaurant.prepTime = sqlite3_column_int(stmt, 5);
         restaurant.isActive = sqlite3_column_int(stmt, 6);
     }
@@ -132,4 +135,28 @@ Restaurant RestaurantDAO::getRestaurantById(int id) {
     sqlite3_finalize(stmt);
 
     return restaurant;
+}
+
+bool RestaurantDAO::toggleRestaurantStatus(int id) {
+
+    Restaurant restaurant = getRestaurantById(id);
+
+    sqlite3* db = database->getDatabase();
+
+    const char* sql =
+            "UPDATE restaurants SET is_active=? WHERE id=?;";
+
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+        return false;
+
+    sqlite3_bind_int(stmt, 1, !restaurant.isActive);
+    sqlite3_bind_int(stmt, 2, id);
+
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+
+    sqlite3_finalize(stmt);
+
+    return success;
 }

@@ -19,4 +19,6 @@ public:
     std::vector<Restaurant> getActiveRestaurants();
 
     Restaurant getRestaurantById(int id);
+
+    bool toggleRestaurantStatus(int id);
 };

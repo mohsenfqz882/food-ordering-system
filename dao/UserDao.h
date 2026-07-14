@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <sqlite3.h>
 
 #include "../DatabaseManager.h"
@@ -24,4 +25,8 @@ public:
     User getUser(const string& username);
 
     string getRole(const string& username);
+
+    std::vector<User> getAllUsers();
+
+    bool deleteUser(int id);
 };

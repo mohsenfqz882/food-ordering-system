@@ -87,10 +87,11 @@ User UserDAO::getUser(const string& username) {
     User user;
 
     if (sqlite3_step(stmt) == SQLITE_ROW) {
+
         user = User(
-            sqlite3_column_int(stmt, 0),
-            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)),
-            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2))
+                sqlite3_column_int(stmt, 0),
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)),
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2))
         );
     }
 
@@ -115,11 +116,60 @@ string UserDAO::getRole(const string& username) {
 
     string role = "";
 
-    if (sqlite3_step(stmt) == SQLITE_ROW) {
+    if (sqlite3_step(stmt) == SQLITE_ROW)
         role = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-    }
 
     sqlite3_finalize(stmt);
 
     return role;
+}
+
+std::vector<User> UserDAO::getAllUsers() {
+
+    std::vector<User> users;
+
+    sqlite3* db = database->getDatabase();
+
+    const char* sql =
+            "SELECT id, username, password FROM users;";
+
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+        return users;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+
+        User user(
+                sqlite3_column_int(stmt, 0),
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)),
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2))
+        );
+
+        users.push_back(user);
+    }
+
+    sqlite3_finalize(stmt);
+
+    return users;
+}
+bool UserDAO::deleteUser(int id) {
+
+    sqlite3* db = database->getDatabase();
+
+    const char* sql =
+            "DELETE FROM users WHERE id=?;";
+
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+        return false;
+
+    sqlite3_bind_int(stmt, 1, id);
+
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+
+    sqlite3_finalize(stmt);
+
+    return success;
 }
