@@ -31,4 +31,6 @@ public:
     std::vector<User> getAllUsers();
 
     bool deleteUser(int id);
+
+    int getRestaurantId(const string& username);
 };

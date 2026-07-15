@@ -23,4 +23,9 @@ public:
     Order getOrderById(int id);
 
     bool updateOrderStatus(int orderId, const std::string& status);
+
+    // Reports
+    int getOrderCount();
+
+    double getTotalSales();
 };

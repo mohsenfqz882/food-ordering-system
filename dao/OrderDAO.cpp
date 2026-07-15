@@ -184,3 +184,47 @@ bool OrderDAO::updateOrderStatus(int orderId,
 
     return success;
 }
+
+int OrderDAO::getOrderCount() {
+
+    sqlite3* db = database->getDatabase();
+
+    const char* sql =
+            "SELECT COUNT(*) FROM orders;";
+
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+        return 0;
+
+    int count = 0;
+
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+        count = sqlite3_column_int(stmt, 0);
+
+    sqlite3_finalize(stmt);
+
+    return count;
+}
+
+double OrderDAO::getTotalSales() {
+
+    sqlite3* db = database->getDatabase();
+
+    const char* sql =
+            "SELECT IFNULL(SUM(total_price),0) FROM orders;";
+
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+        return 0;
+
+    double total = 0;
+
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+        total = sqlite3_column_double(stmt, 0);
+
+    sqlite3_finalize(stmt);
+
+    return total;
+}

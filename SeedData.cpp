@@ -2,39 +2,19 @@
 
 #include "dao/RestaurantDAO.h"
 #include "dao/MenuItemDAO.h"
-#include "dao/UserDAO.h"
 
 #include "Restaurant.h"
 #include "FoodItem.h"
 #include "DrinkItem.h"
-#include "User.h"
 
 void SeedData::initialize(DatabaseManager* database) {
-
-    UserDAO userDAO(database);
-
-    if (!userDAO.usernameExists("admin")) {
-
-        userDAO.addUser(
-                User(0,
-                     "admin",
-                     "admin123"),
-                "admin");
-    }
-
-    if (!userDAO.usernameExists("manager")) {
-
-        userDAO.addUser(
-                User(0,
-                     "manager",
-                     "manager123"),
-                "manager");
-    }
 
     RestaurantDAO restaurantDAO(database);
 
     if (!restaurantDAO.getAllRestaurants().empty())
         return;
+
+    // ---------- Restaurants ----------
 
     restaurantDAO.addRestaurant(
             Restaurant(0,
@@ -63,9 +43,43 @@ void SeedData::initialize(DatabaseManager* database) {
                        15,
                        1));
 
+    // ---------- Default Users ----------
+
+    sqlite3* db = database->getDatabase();
+
+    sqlite3_exec(db,
+                 "INSERT INTO users(username,password,role,restaurant_id) "
+                 "VALUES('admin','1234','admin',0);",
+                 nullptr,
+                 nullptr,
+                 nullptr);
+
+    sqlite3_exec(db,
+                 "INSERT INTO users(username,password,role,restaurant_id) "
+                 "VALUES('manager1','1234','manager',1);",
+                 nullptr,
+                 nullptr,
+                 nullptr);
+
+    sqlite3_exec(db,
+                 "INSERT INTO users(username,password,role,restaurant_id) "
+                 "VALUES('manager2','1234','manager',2);",
+                 nullptr,
+                 nullptr,
+                 nullptr);
+
+    sqlite3_exec(db,
+                 "INSERT INTO users(username,password,role,restaurant_id) "
+                 "VALUES('manager3','1234','manager',3);",
+                 nullptr,
+                 nullptr,
+                 nullptr);
+
+    // ---------- Menu ----------
+
     MenuItemDAO menuItemDAO(database);
 
-    // ---------- Restaurant 1 ----------
+    // Restaurant 1
 
     menuItemDAO.addMenuItem(
             1,
@@ -94,7 +108,7 @@ void SeedData::initialize(DatabaseManager* database) {
                           true,
                           300));
 
-    // ---------- Restaurant 2 ----------
+    // Restaurant 2
 
     menuItemDAO.addMenuItem(
             2,
@@ -123,7 +137,7 @@ void SeedData::initialize(DatabaseManager* database) {
                           true,
                           330));
 
-    // ---------- Restaurant 3 ----------
+    // Restaurant 3
 
     menuItemDAO.addMenuItem(
             3,

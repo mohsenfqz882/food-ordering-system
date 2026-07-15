@@ -40,6 +40,7 @@ int main() {
         if (roleChoice == 0)
             break;
 
+        // ================= CUSTOMER =================
 
         if (roleChoice == 1) {
 
@@ -50,7 +51,6 @@ int main() {
             cout << "Choice: ";
 
             cin >> choice;
-
 
             if (choice == 1) {
 
@@ -69,7 +69,6 @@ int main() {
                 cout << "Password: ";
                 cin >> password;
 
-
                 User user(0, username, password);
 
                 if (userDAO.addUser(user))
@@ -77,7 +76,6 @@ int main() {
                 else
                     cout << "Account creation failed.\n";
             }
-
 
             else if (choice == 2) {
 
@@ -90,13 +88,17 @@ int main() {
                 cout << "Password: ";
                 cin >> password;
 
-
                 if (!userDAO.login(username, password)) {
 
                     cout << "Wrong username or password.\n";
                     continue;
                 }
 
+                if (userDAO.getRole(username) != "customer") {
+
+                    cout << "This account is not a customer.\n";
+                    continue;
+                }
 
                 User user = userDAO.getUser(username);
 
@@ -110,12 +112,12 @@ int main() {
             }
         }
 
+        // ================= MANAGER =================
 
         else if (roleChoice == 2) {
 
             string username;
             string password;
-
 
             cout << "Manager Username: ";
             cin >> username;
@@ -123,13 +125,11 @@ int main() {
             cout << "Password: ";
             cin >> password;
 
-
             if (!userDAO.login(username, password)) {
 
                 cout << "Wrong username or password.\n";
                 continue;
             }
-
 
             if (userDAO.getRole(username) != "manager") {
 
@@ -137,17 +137,24 @@ int main() {
                 continue;
             }
 
+            int restaurantId = userDAO.getRestaurantId(username);
 
-            RestaurantManagerMenu menu(&db, 1);
+            if (restaurantId == 0) {
+
+                cout << "No restaurant assigned to this manager.\n";
+                continue;
+            }
+
+            RestaurantManagerMenu menu(&db, restaurantId);
             menu.run();
         }
 
+        // ================= ADMIN =================
 
         else if (roleChoice == 3) {
 
             string username;
             string password;
-
 
             cout << "Admin Username: ";
             cin >> username;
@@ -155,13 +162,11 @@ int main() {
             cout << "Password: ";
             cin >> password;
 
-
             if (!userDAO.login(username, password)) {
 
                 cout << "Wrong username or password.\n";
                 continue;
             }
-
 
             if (userDAO.getRole(username) != "admin") {
 
@@ -169,18 +174,15 @@ int main() {
                 continue;
             }
 
-
             AdminMenu menu(&db);
             menu.run();
         }
-
 
         else {
 
             cout << "Invalid choice.\n";
         }
     }
-
 
     db.close();
 

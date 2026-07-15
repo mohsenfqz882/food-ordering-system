@@ -4,7 +4,8 @@ CREATE TABLE users (
                        id INTEGER PRIMARY KEY AUTOINCREMENT,
                        username TEXT,
                        password TEXT,
-                       role TEXT          -- customer / manager / admin
+                       role TEXT,
+                       restaurant_id INTEGER DEFAULT 0
 );
 
 CREATE TABLE restaurants (

@@ -26,7 +26,7 @@ void AdminMenu::run() {
         std::cout << "3. View Restaurants\n";
         std::cout << "4. Change Restaurant Status\n";
         std::cout << "5. View All Orders\n";
-        std::cout << "6. Add Restaurant\n";
+        std::cout << "6. Reports\n";
         std::cout << "0. Logout\n";
         std::cout << "Choice: ";
 
@@ -39,21 +39,21 @@ void AdminMenu::run() {
 
         case 1: {
 
-            std::vector<User> users = userDAO.getAllUsers();
+            auto users = userDAO.getAllUsers();
 
             if (users.empty()) {
-
                 std::cout << "No users found.\n";
                 break;
             }
 
             std::cout << "\n===== Users =====\n";
 
-            for (const User& user : users) {
+            for (const auto& user : users) {
 
-                std::cout << "ID: " << user.getId()
-                          << " | Username: " << user.getUsername()
-                          << std::endl;
+                std::cout
+                        << "ID: " << user.getId()
+                        << " | Username: " << user.getUsername()
+                        << std::endl;
             }
 
             break;
@@ -61,21 +61,21 @@ void AdminMenu::run() {
 
         case 2: {
 
-            std::vector<User> users = userDAO.getAllUsers();
+            auto users = userDAO.getAllUsers();
 
             if (users.empty()) {
-
                 std::cout << "No users found.\n";
                 break;
             }
 
             std::cout << "\n===== Users =====\n";
 
-            for (const User& user : users) {
+            for (const auto& user : users) {
 
-                std::cout << "ID: " << user.getId()
-                          << " | Username: " << user.getUsername()
-                          << std::endl;
+                std::cout
+                        << "ID: " << user.getId()
+                        << " | Username: " << user.getUsername()
+                        << std::endl;
             }
 
             int id;
@@ -96,24 +96,24 @@ void AdminMenu::run() {
 
         case 3: {
 
-            std::vector<Restaurant> restaurants =
+            auto restaurants =
                     restaurantDAO.getAllRestaurants();
 
             if (restaurants.empty()) {
-
                 std::cout << "No restaurants found.\n";
                 break;
             }
 
             std::cout << "\n===== Restaurants =====\n";
 
-            for (const Restaurant& restaurant : restaurants) {
+            for (const auto& restaurant : restaurants) {
 
-                std::cout << "ID: " << restaurant.id
-                          << " | " << restaurant.name
-                          << " | "
-                          << (restaurant.isActive ? "Active" : "Inactive")
-                          << std::endl;
+                std::cout
+                        << "ID: " << restaurant.id
+                        << " | " << restaurant.name
+                        << " | "
+                        << (restaurant.isActive ? "Active" : "Inactive")
+                        << std::endl;
             }
 
             break;
@@ -121,24 +121,24 @@ void AdminMenu::run() {
 
         case 4: {
 
-            std::vector<Restaurant> restaurants =
+            auto restaurants =
                     restaurantDAO.getAllRestaurants();
 
             if (restaurants.empty()) {
-
                 std::cout << "No restaurants found.\n";
                 break;
             }
 
             std::cout << "\n===== Restaurants =====\n";
 
-            for (const Restaurant& restaurant : restaurants) {
+            for (const auto& restaurant : restaurants) {
 
-                std::cout << "ID: " << restaurant.id
-                          << " | " << restaurant.name
-                          << " | "
-                          << (restaurant.isActive ? "Active" : "Inactive")
-                          << std::endl;
+                std::cout
+                        << "ID: " << restaurant.id
+                        << " | " << restaurant.name
+                        << " | "
+                        << (restaurant.isActive ? "Active" : "Inactive")
+                        << std::endl;
             }
 
             int id;
@@ -156,65 +156,64 @@ void AdminMenu::run() {
 
             break;
         }
-            case 5: {
 
-            std::vector<Order> orders = orderDAO.getAllOrders();
+        case 5: {
+
+            auto orders =
+                    orderDAO.getAllOrders();
 
             if (orders.empty()) {
-
                 std::cout << "No orders found.\n";
                 break;
             }
 
             std::cout << "\n===== Orders =====\n";
 
-            for (const Order& order : orders) {
+            for (const auto& order : orders) {
 
-                std::cout << "Order ID: " << order.id
-                          << " | User: " << order.userId
-                          << " | Restaurant: " << order.restaurantId
-                          << " | Status: " << order.status
-                          << " | Total: " << order.totalPrice
-                          << std::endl;
+                std::cout
+                        << "Order ID: " << order.id
+                        << " | User: " << order.userId
+                        << " | Restaurant: " << order.restaurantId
+                        << " | Status: " << order.status
+                        << " | Total: " << order.totalPrice
+                        << std::endl;
             }
 
             break;
-            }
+        }
 
-            case 6: {
+        case 6: {
 
-            Restaurant restaurant;
+            std::cout << "\n===== Reports =====\n";
 
-            std::cin.ignore();
+            std::cout
+                    << "Total Users: "
+                    << userDAO.getAllUsers().size()
+                    << std::endl;
 
-            std::cout << "Restaurant Name: ";
-            std::getline(std::cin, restaurant.name);
+            std::cout
+                    << "Total Restaurants: "
+                    << restaurantDAO.getAllRestaurants().size()
+                    << std::endl;
 
-            std::cout << "Address: ";
-            std::getline(std::cin, restaurant.address);
+            std::cout
+                    << "Total Orders: "
+                    << orderDAO.getOrderCount()
+                    << std::endl;
 
-            std::cout << "Phone: ";
-            std::getline(std::cin, restaurant.phone);
-
-            std::cout << "Description: ";
-            std::getline(std::cin, restaurant.description);
-
-            std::cout << "Preparation Time (min): ";
-            std::cin >> restaurant.prepTime;
-
-            restaurant.isActive = true;
-
-            if (restaurantDAO.addRestaurant(restaurant))
-                std::cout << "Restaurant added successfully.\n";
-            else
-                std::cout << "Failed to add restaurant.\n";
+            std::cout
+                    << "Total Sales: "
+                    << orderDAO.getTotalSales()
+                    << " Toman"
+                    << std::endl;
 
             break;
-            }
+        }
 
-            default:
+        default:
 
-                std::cout << "Invalid choice.\n";
+            std::cout << "Invalid choice.\n";
         }
     }
 }
