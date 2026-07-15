@@ -16,11 +16,13 @@ private:
 public:
     UserDAO(DatabaseManager* database);
 
-    bool addUser(const User& user);
+    bool addUser(const User& user,
+                 const string& role = "customer");
 
     bool usernameExists(const string& username);
 
-    bool login(const string& username, const string& password);
+    bool login(const string& username,
+               const string& password);
 
     User getUser(const string& username);
 

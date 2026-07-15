@@ -7,6 +7,7 @@
 
 #include "CustomerMenu.h"
 #include "RestaurantManagerMenu.h"
+#include "AdminMenu.h"
 
 using namespace std;
 
@@ -25,86 +26,161 @@ int main() {
 
     while (true) {
 
-        int choice;
+        int roleChoice;
 
         cout << "\n========== Food Ordering System ==========\n";
-        cout << "1. Sign Up\n";
-        cout << "2. Login\n";
+        cout << "1. Customer\n";
+        cout << "2. Restaurant Manager\n";
+        cout << "3. System Admin\n";
         cout << "0. Exit\n";
         cout << "Choice: ";
-        cin >> choice;
 
-        if (choice == 0)
+        cin >> roleChoice;
+
+        if (roleChoice == 0)
             break;
 
-        if (choice == 1) {
 
-            string username;
-            string password;
+        if (roleChoice == 1) {
 
-            cout << "Username: ";
-            cin >> username;
+            int choice;
 
-            if (userDAO.usernameExists(username)) {
-                cout << "Username already exists.\n";
-                continue;
+            cout << "\n1. Sign Up\n";
+            cout << "2. Login\n";
+            cout << "Choice: ";
+
+            cin >> choice;
+
+
+            if (choice == 1) {
+
+                string username;
+                string password;
+
+                cout << "Username: ";
+                cin >> username;
+
+                if (userDAO.usernameExists(username)) {
+
+                    cout << "Username already exists.\n";
+                    continue;
+                }
+
+                cout << "Password: ";
+                cin >> password;
+
+
+                User user(0, username, password);
+
+                if (userDAO.addUser(user))
+                    cout << "Account created successfully.\n";
+                else
+                    cout << "Account creation failed.\n";
             }
 
-            cout << "Password: ";
-            cin >> password;
 
-            User user(0, username, password);
+            else if (choice == 2) {
 
-            if (userDAO.addUser(user))
-                cout << "Account created successfully.\n";
-            else
-                cout << "Error creating account.\n";
+                string username;
+                string password;
+
+                cout << "Username: ";
+                cin >> username;
+
+                cout << "Password: ";
+                cin >> password;
+
+
+                if (!userDAO.login(username, password)) {
+
+                    cout << "Wrong username or password.\n";
+                    continue;
+                }
+
+
+                User user = userDAO.getUser(username);
+
+                CustomerMenu menu(&db, user.getId());
+                menu.run();
+            }
+
+            else {
+
+                cout << "Invalid choice.\n";
+            }
         }
 
-        else if (choice == 2) {
+
+        else if (roleChoice == 2) {
 
             string username;
             string password;
 
-            cout << "Username: ";
+
+            cout << "Manager Username: ";
             cin >> username;
 
             cout << "Password: ";
             cin >> password;
 
+
             if (!userDAO.login(username, password)) {
+
                 cout << "Wrong username or password.\n";
                 continue;
             }
 
-            User user = userDAO.getUser(username);
 
-            string role = userDAO.getRole(username);
+            if (userDAO.getRole(username) != "manager") {
 
-            if (role == "customer") {
-
-                CustomerMenu menu(&db, user.getId());
-                menu.run();
-
+                cout << "This account is not a manager.\n";
+                continue;
             }
-            else if (role == "manager") {
 
-                // فعلاً مدیر رستوران شماره 1
-                RestaurantManagerMenu menu(&db, 1);
-                menu.run();
 
+            RestaurantManagerMenu menu(&db, 1);
+            menu.run();
+        }
+
+
+        else if (roleChoice == 3) {
+
+            string username;
+            string password;
+
+
+            cout << "Admin Username: ";
+            cin >> username;
+
+            cout << "Password: ";
+            cin >> password;
+
+
+            if (!userDAO.login(username, password)) {
+
+                cout << "Wrong username or password.\n";
+                continue;
             }
-            else if (role == "admin") {
 
-                cout << "Admin section will be implemented later.\n";
 
+            if (userDAO.getRole(username) != "admin") {
+
+                cout << "This account is not an admin.\n";
+                continue;
             }
-            else {
 
-                cout << "Unknown user role.\n";
-            }
+
+            AdminMenu menu(&db);
+            menu.run();
+        }
+
+
+        else {
+
+            cout << "Invalid choice.\n";
         }
     }
+
 
     db.close();
 

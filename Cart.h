@@ -13,6 +13,10 @@ private:
 public:
     void addItem(int itemId, int count);
 
+    void removeItem(int itemId);
+
+    void changeCount(int itemId, int newCount);
+
     void clear();
 
     bool empty() const;

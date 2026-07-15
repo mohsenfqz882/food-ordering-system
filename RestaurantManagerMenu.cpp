@@ -42,25 +42,65 @@ void RestaurantManagerMenu::run() {
 
         switch (choice) {
 
-        case 1: {
+            case 1: {
 
-            Restaurant restaurant =
-                    restaurantDAO.getRestaurantById(restaurantId);
+                Restaurant restaurant =
+                        restaurantDAO.getRestaurantById(restaurantId);
 
-            std::cout << "\n===== Restaurant Information =====\n";
-            std::cout << "Name: " << restaurant.name << '\n';
-            std::cout << "Address: " << restaurant.address << '\n';
-            std::cout << "Phone: " << restaurant.phone << '\n';
-            std::cout << "Description: " << restaurant.description << '\n';
-            std::cout << "Preparation Time: "
-                      << restaurant.prepTime
-                      << " min\n";
-            std::cout << "Status: "
-                      << (restaurant.isActive ? "Active" : "Inactive")
-                      << "\n";
+                std::cout << "\n===== Restaurant Information =====\n";
+                std::cout << "Name: " << restaurant.name << '\n';
+                std::cout << "Address: " << restaurant.address << '\n';
+                std::cout << "Phone: " << restaurant.phone << '\n';
+                std::cout << "Description: " << restaurant.description << '\n';
+                std::cout << "Preparation Time: "
+                          << restaurant.prepTime
+                          << " min\n";
+                std::cout << "Status: "
+                          << (restaurant.isActive ? "Active" : "Inactive")
+                          << "\n";
 
-            break;
-        }
+                std::cout << "\n1. Edit Restaurant Information\n";
+                std::cout << "0. Back\n";
+                std::cout << "Choice: ";
+
+                int editChoice;
+                std::cin >> editChoice;
+
+                if (editChoice == 0)
+                    break;
+
+                std::cin.ignore();
+
+                std::cout << "New Name: ";
+                std::getline(std::cin, restaurant.name);
+
+                std::cout << "New Address: ";
+                std::getline(std::cin, restaurant.address);
+
+                std::cout << "New Phone: ";
+                std::getline(std::cin, restaurant.phone);
+
+                std::cout << "New Description: ";
+                std::getline(std::cin, restaurant.description);
+
+                std::cout << "Preparation Time: ";
+                std::cin >> restaurant.prepTime;
+
+                int active;
+
+                std::cout << "Active (1/0): ";
+                std::cin >> active;
+
+                restaurant.isActive = active;
+
+                if (restaurantDAO.updateRestaurant(restaurant))
+                    std::cout << "Restaurant updated successfully.\n";
+                else
+                    std::cout << "Update failed.\n";
+
+                break;
+            }
+
 
         case 2: {
 

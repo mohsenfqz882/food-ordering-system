@@ -21,4 +21,6 @@ public:
     Restaurant getRestaurantById(int id);
 
     bool toggleRestaurantStatus(int id);
+
+    bool updateRestaurant(const Restaurant& restaurant);
 };

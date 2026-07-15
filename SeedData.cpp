@@ -2,12 +2,34 @@
 
 #include "dao/RestaurantDAO.h"
 #include "dao/MenuItemDAO.h"
+#include "dao/UserDAO.h"
 
 #include "Restaurant.h"
 #include "FoodItem.h"
 #include "DrinkItem.h"
+#include "User.h"
 
 void SeedData::initialize(DatabaseManager* database) {
+
+    UserDAO userDAO(database);
+
+    if (!userDAO.usernameExists("admin")) {
+
+        userDAO.addUser(
+                User(0,
+                     "admin",
+                     "admin123"),
+                "admin");
+    }
+
+    if (!userDAO.usernameExists("manager")) {
+
+        userDAO.addUser(
+                User(0,
+                     "manager",
+                     "manager123"),
+                "manager");
+    }
 
     RestaurantDAO restaurantDAO(database);
 

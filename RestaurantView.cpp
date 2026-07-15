@@ -31,7 +31,9 @@ void RestaurantView::run() {
 
         std::cout << "\n1. Add Item\n";
         std::cout << "2. View Cart\n";
-        std::cout << "3. Checkout\n";
+        std::cout << "3. Change Item Count\n";
+        std::cout << "4. Remove Item\n";
+        std::cout << "5. Checkout\n";
         std::cout << "0. Back\n";
         std::cout << "Choice: ";
 
@@ -68,6 +70,34 @@ void RestaurantView::run() {
         }
 
         else if (choice == 3) {
+
+            int itemId;
+            int count;
+
+            std::cout << "Item ID: ";
+            std::cin >> itemId;
+
+            std::cout << "New Count: ";
+            std::cin >> count;
+
+            cart.changeCount(itemId, count);
+
+            std::cout << "Cart updated successfully.\n";
+        }
+
+        else if (choice == 4) {
+
+            int itemId;
+
+            std::cout << "Item ID: ";
+            std::cin >> itemId;
+
+            cart.removeItem(itemId);
+
+            std::cout << "Item removed successfully.\n";
+        }
+
+        else if (choice == 5) {
 
             if (cart.empty()) {
 
